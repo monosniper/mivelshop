@@ -27,7 +27,7 @@ const Header = () => {
             <div className="basket">
                 <div className="basket__icon">
                     <Image
-                        src={'/../public/assets/img/icon/basket.svg'}
+                        src={'/assets/img/icon/basket.svg'}
                         width={30}
                         height={30}
                         alt={'Корзина'}
