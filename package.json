@@ -1,0 +1,42 @@
+{
+  "name": "Artist ashop",
+  "version": "1.0.0",
+  "description": "artist shop zakaz vot delayu",
+  "main": "index.js",
+  "author": "monosniper",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@mui/material": "^5.10.2",
+    "@svgr/webpack": "^6.3.1",
+    "axios": "^0.27.2",
+    "bcrypt": "^5.0.0",
+    "framer-motion": "^7.2.1",
+    "isomorphic-unfetch": "^3.0.0",
+    "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "mobx": "^6.6.1",
+    "mobx-react": "^7.5.2",
+    "mobx-react-lite": "^3.4.0",
+    "mongodb": "^3.5.2",
+    "next": "^10.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.4.0",
+    "sass": "^1.54.5",
+    "swr": "^0.1.16",
+    "unfetch": "^4.1.0",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "eslint": "8.15.0",
+    "eslint-config-next": "12.1.6",
+    "mocker-data-generator": "^2.12.0"
+  }
+}
