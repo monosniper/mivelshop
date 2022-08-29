@@ -26,12 +26,7 @@ const Header = () => {
         <div className="banner__header">
             <div className="basket">
                 <div className="basket__icon">
-                    <Image
-                        src={'/assets/img/icon/basket.svg'}
-                        width={30}
-                        height={30}
-                        alt={'Корзина'}
-                    />
+                    <img src="assets/img/icon/basket.svg" alt="Корзина"/>
                 </div>
                 <div className="basket__count">3</div>
             </div>
