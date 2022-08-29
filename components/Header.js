@@ -25,9 +25,7 @@ const Header = () => {
     return (
         <div className="banner__header">
             <div className="basket">
-                <div className="basket__icon">
-                    <img src="assets/img/icon/basket.svg" alt="Корзина"/>
-                </div>
+                <div className="basket__icon"></div>
                 <div className="basket__count">3</div>
             </div>
             {store.loggedIn ? <User user={data} logout={logout} /> : <AuthButton />}
