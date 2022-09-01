@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import AdminLayout from "../../../components/AdminLayout";
 import {Link} from "../../../components/Link";
 import userService from "../../../services/userService";
+import {AiFillCheckCircle} from "react-icons/ai";
 
 const Index = () => {
     const [users, setUsers] = useState(null);
 
     useEffect(() => {
-        userService.getAll().then(x => setUsers(x));
+        userService.getAll().then(x => setUsers(x.data));
     }, []);
 
     function deleteUser(id) {
@@ -16,19 +17,20 @@ const Index = () => {
             return x;
         }));
         userService.delete(id).then(() => {
-            setUsers(users => users.filter(x => x.id !== id));
+            setUsers(users => users.filter(x => x._id !== id));
         });
     }
 
     return (
         <AdminLayout>
-            <h1>Users</h1>
-            <Link href="users/add" className="btn btn-sm btn-success mb-2">Add User</Link>
-            <table className="table table-striped">
+            <h1>Пользователи</h1>
+            {/*<Link href="users/add" className="btn btn-sm btn-success mb-2">Add User</Link>*/}
+            <table className="table table-striped table-responsive">
                 <thead>
                 <tr>
                     <th style={{ width: '40%' }}>Имя</th>
                     <th style={{ width: '50%' }}>Почта</th>
+                    <th style={{ width: '50%' }}>Админ</th>
                     <th style={{ width: '10%' }}></th>
                 </tr>
                 </thead>
@@ -37,11 +39,12 @@ const Index = () => {
                     <tr key={user.id}>
                         <td>{user.name}</td>
                         <td>{user.email}</td>
+                        <td>{user.isAdmin ? <AiFillCheckCircle /> : null}</td>
                         <td style={{ whiteSpace: 'nowrap' }}>
-                            <button onClick={() => deleteUser(user.id)} className="btn btn-sm btn-danger btn-delete-user" disabled={user.isDeleting}>
+                            <button onClick={() => deleteUser(user._id)} className="btn btn-sm btn-danger btn-delete-user" disabled={user.isDeleting}>
                                 {user.isDeleting
                                     ? <span className="spinner-border spinner-border-sm"></span>
-                                    : <span>Delete</span>
+                                    : <span>Удалить</span>
                                 }
                             </button>
                         </td>

@@ -29,13 +29,14 @@ const RegisterModal = () => {
                 }),
             })
                 .then((r) => r.json())
-                .then((data) => {
-                    if (data && data.error) {
-                        setSignupError(data.message);
+                .then((rs) => {
+                    console.log(rs)
+                    if (rs && rs.error) {
+                        setSignupError(rs.error);
                     }
-                    if (data && data.token) {
+                    if (rs && rs.data) {
                         //set cookie
-                        cookie.set('token', data.token, {expires: 2});
+                        cookie.set('token', rs.data, {expires: 2});
                         Router.push('/');
                         store.setLoggedIn(true)
                         setIsOpen(false)

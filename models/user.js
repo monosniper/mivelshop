@@ -1,21 +1,19 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import mongoose, {Schema} from "mongoose";
 
-const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true
+const UserSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password: String,
+    isAdmin: {
+        type: Boolean,
+        default: false,
     },
-    email: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
+    createdAt: {
+        type: Date,
+        default: new Date(),
     },
 });
 
-global.User = global.User || mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
-export default global.User;
+export default User;

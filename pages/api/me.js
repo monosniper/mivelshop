@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const jwtSecret = 'SUPERSECRETE20220';
 
 export default (req, res) => {
   if (req.method === 'GET') {
@@ -11,7 +10,7 @@ export default (req, res) => {
     const token = req.cookies.token;
     if (token) {
       try {
-        decoded = jwt.verify(token, jwtSecret);
+        decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
       } catch (e) {
         console.error(e);
       }

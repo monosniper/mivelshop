@@ -1,81 +1,40 @@
-const items = [
-    {
-        id: 1,
-        type: 'products',
-        name: 'картины',
-    },
-    {
-        id: 2,
-        type: 'products',
-        name: 'нашивки',
-    },
-    {
-        id: 3,
-        type: 'products',
-        name: 'одежда',
-    },
-    {
-        id: 4,
-        type: 'products',
-        name: 'стикеры',
-    },
-    {
-        id: 5,
-        type: 'products',
-        name: 'магниты',
-    },
-    {
-        id: 6,
-        type: 'products',
-        name: 'закладки',
-    },
-    {
-        id: 7,
-        type: 'products',
-        name: 'коробки',
-    },
-    {
-        id: 8,
-        type: 'products',
-        name: 'раскраска',
-    },
-    {
-        id: 9,
-        type: 'products',
-        name: 'художество',
-    },
-    {
-        id: 10,
-        type: 'products',
-        name: 'уникальный костюм',
-    },
-    {
-        id: 11,
-        type: 'digital',
-        name: 'раскраска',
-    },
-    {
-        id: 12,
-        type: 'digital',
-        name: 'художество',
-    },
-    {
-        id: 13,
-        type: 'digital',
-        name: 'уникальный костюм',
-    },
-]
+import Category from "../../../models/category";
+import dbConnect from "../../../utils/db";
 
-export default (req, res) => {
-    const { type } = req.query
-    let data = [...items]
+dbConnect();
 
-    if(type) {
-        data = data.filter(item => item.type === type)
+export default async (req, res) => {
+    const { method } = req;
+    switch (method) {
+        case "GET":
+            try {
+                const { type } = req.query
+                let filters = {}
+
+                if(type) {
+                    filters.type = type
+                }
+
+                const items = await Category.find(filters);
+                res.status(200).json({ok: true, data: items });
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ ok: false, error });
+            }
+            break;
+
+        case "POST":
+            try {
+                const { name, type } = req.body;
+
+                if (!name && !type) throw "invalid data";
+                const category = await Category.create({ name, type });
+
+                res.status(201).json({ok:true, data:category});
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ ok: false, error });
+            }
+            break;
     }
-
-    res.status(200).json({
-        ok: true,
-        data
-    });
 };

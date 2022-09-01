@@ -1,9 +1,13 @@
+import axios from "axios";
+
 const getAll = async () => {
-    return [];
+    const rs =  await axios.get('/api/users');
+    return rs.data;
 }
 
 const _delete = async (id) => {
-    return true;
+    const rs =  await axios.delete('/api/users/'+id);
+    return rs.data;
 }
 
 const userService = {

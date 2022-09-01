@@ -3,6 +3,9 @@ import {Box, Button, Input, Modal, Stack, TextField, Typography} from "@mui/mate
 import RegisterModal from "./RegisterModal";
 import cookie from "js-cookie";
 import store from "../store/store";
+import useSWR from "swr";
+import fetch from "isomorphic-unfetch";
+import {observer} from "mobx-react";
 
 const AuthButton = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -24,13 +27,13 @@ const AuthButton = () => {
             .then((r) => {
                 return r.json();
             })
-            .then((data) => {
-                if (data && data.error) {
-                    setLoginError(data.message);
+            .then((rs) => {
+                if (rs && rs.error) {
+                    setLoginError(rs.error);
                 }
-                if (data && data.token) {
+                if (rs && rs.data) {
                     //set cookie
-                    cookie.set('token', data.token, {expires: 2});
+                    cookie.set('token', rs.data, {expires: 2});
                     store.setLoggedIn(true)
                     setIsOpen(false)
                 }
@@ -64,4 +67,4 @@ const AuthButton = () => {
     );
 };
 
-export default AuthButton;
+export default observer(AuthButton);

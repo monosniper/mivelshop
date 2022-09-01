@@ -1,38 +1,83 @@
-const items = [
-    {
-        id: 1,
-        type: 'products',
-        name: 'Name',
-        price: 49,
-        category_id: 1,
-        long: false,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, adipisci atque blanditiis commodi expedita id iure, nobis quibusdam repellendus unde vel velit voluptates. Delectus deleniti illum, laborum nesciunt sint temporibus!'
-    },
-    {
-        id: 2,
-        type: 'products',
-        name: 'Name',
-        price: 49,
-        category_id: 2,
-        long: true,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, adipisci atque blanditiis commodi expedita id iure, nobis quibusdam repellendus unde vel velit voluptates. Delectus deleniti illum, laborum nesciunt sint temporibus!'
+import dbConnect from "../../../utils/db";
+import Item from "../../../models/item";
+
+dbConnect();
+
+export default async (req, res) => {
+    const { method } = req;
+    switch (method) {
+        case "GET":
+            try {
+                const {
+                    category,
+                    type,
+                    limit,
+                    offset,
+                    get,
+                } = req.query
+
+                let filters = {}
+
+                if(type) {
+                    filters.type = type
+                }
+
+                if(category) {
+                    filters.category = category
+                }
+
+                if(get && get === 'count') {
+                    const count = await Item.find(filters).count();
+                    res.status(200).json({ok: true, data: count });
+                    return;
+                }
+
+                let items = await Item.find(filters, null, {limit, skip: offset}).populate('category');
+
+                res.status(200).json({ok: true, data: items });
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ ok: false, error });
+            }
+            break;
+
+        case "POST":
+            try {
+                const {
+                    uuid,
+                    name,
+                    type,
+                    price,
+                    long,
+                    description,
+                    category,
+                } = req.body;
+
+                if (
+                    !uuid
+                    && !name
+                    && !type
+                    && !price
+                    && !long
+                    && !description
+                    && !category
+                ) throw "invalid data";
+                const client = await Item.create(
+                    {
+                        uuid,
+                        name,
+                        type,
+                        price,
+                        long,
+                        description,
+                        category,
+                    });
+
+                res.status(201).json({ok: true, data:client});
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ ok: false, error });
+            }
+            break;
     }
-]
-
-export default (req, res) => {
-    const { category, type } = req.query
-    let data = [...items]
-
-    if(type) {
-        data = data.filter(item => item.type === type)
-    }
-
-    if(category) {
-        data = data.filter(item => item.category_id === category)
-    }
-
-    res.status(200).json({
-        ok: true,
-        data
-    });
 };

@@ -18,7 +18,7 @@ const AdminLayout = ({ children }) => {
             if (data.email) {
                 store.setLoggedIn(true);
             }
-            console.log(data.isAdmin)
+
             if(!data.isAdmin) {
                 router.push('/')
             }

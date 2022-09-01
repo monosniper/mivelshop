@@ -11,8 +11,16 @@ const nextConfig = {
       use: ['@svgr/webpack'],
     })
 
+    if (!isServer) {
+      config.node = {
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+      }
+    }
+
     return config
-  }
+  },
 }
 
 module.exports = nextConfig
