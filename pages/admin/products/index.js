@@ -51,27 +51,25 @@ const Index = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {items && items.map(item => {
-                    return <tr key={item._id}>
-                        <td><img style={{maxWidth: 120}} src={previews[item.uuid]} alt={item.name}/></td>
-                        <td>{item.name}</td>
-                        <td>${item.price}</td>
-                        <td>{item.description}</td>
-                        <td>{item.category.name}</td>
-                        <td>{item.long ? <AiFillCheckCircle /> : null}</td>
-                        <td style={{ whiteSpace: 'nowrap' }}>
-                            <div style={{display:"flex",alignItems:"center",gap:'.3rem'}}>
-                                <Link href={"products/"+item._id} className="btn btn-sm btn-success">Редактировать</Link>
-                                <button onClick={() => deleteItem(item._id)} className="btn btn-sm btn-danger btn-delete-user" disabled={item.isDeleting}>
-                                    {item.isDeleting
-                                        ? <span className="spinner-border spinner-border-sm"></span>
-                                        : <span>Удалить</span>
-                                    }
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                })}
+                {items && items.map(item => previews[item.uuid] ? <tr key={item._id}>
+                    <td><img style={{maxWidth: 120}} src={previews[item.uuid][0]} alt={item.name}/></td>
+                    <td>{item.name}</td>
+                    <td>${item.price}</td>
+                    <td>{item.description}</td>
+                    <td>{item.category.name}</td>
+                    <td>{item.long ? <AiFillCheckCircle /> : null}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                        <div style={{display:"flex",alignItems:"center",gap:'.3rem'}}>
+                            <Link href={"products/"+item._id} className="btn btn-sm btn-success">Редактировать</Link>
+                            <button onClick={() => deleteItem(item._id)} className="btn btn-sm btn-danger btn-delete-user" disabled={item.isDeleting}>
+                                {item.isDeleting
+                                    ? <span className="spinner-border spinner-border-sm"></span>
+                                    : <span>Удалить</span>
+                                }
+                            </button>
+                        </div>
+                    </td>
+                </tr> : null)}
                 {!items &&
                     <tr>
                         <td colSpan="4" className="text-center">

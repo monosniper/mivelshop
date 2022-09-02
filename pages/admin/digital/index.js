@@ -6,22 +6,16 @@ import itemService from "../../../services/itemService";
 import categoryService from "../../../services/categoryService";
 import {list, meta} from "ya-disk";
 import {Stack} from "@mui/material";
+import usePreviews from "../../../hooks/usePreviews";
 
 const Index = () => {
     const [items, setItems] = useState(null);
-    const [previews, setPreviews] = useState({});
+    const [previews, setPreviews] = usePreviews(true);
 
     useEffect(() => {
         itemService.getAll('digital').then(x => {
             setItems(x.data)
-            const data = list(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, {limit: 999999}).then(rs => {
-                const newItems = {}
-                rs.items.filter(item => item.path.indexOf(process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME) !== -1).forEach(item => {
-                    const uuid = item.name.split('.')[0]
-                    newItems[uuid] = item.preview
-                })
-                setPreviews(newItems)
-            });
+            setPreviews()
         });
     }, []);
 
@@ -52,9 +46,8 @@ const Index = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {items && items.map(item => {
-                    return <tr key={item._id}>
-                        <td><img style={{maxWidth: 120}} src={previews[item.uuid]} alt={item.name}/></td>
+                {items && items.map(item => previews[item.uuid] ? <tr key={item._id}>
+                        <td><img style={{maxWidth: 120}} src={previews[item.uuid][0]} alt={item.name}/></td>
                         <td>{item.name}</td>
                         <td>${item.price}</td>
                         <td>{item.description}</td>
@@ -71,8 +64,7 @@ const Index = () => {
                                 </button>
                             </div>
                         </td>
-                    </tr>
-                })}
+                    </tr> : null)}
                 {!items &&
                     <tr>
                         <td colSpan="4" className="text-center">

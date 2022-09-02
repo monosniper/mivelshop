@@ -17,6 +17,8 @@ import {
 import store from "../../../store/store";
 import AdminLayout from "../../../components/AdminLayout";
 import axios from "axios";
+import b64toBlob from "../../../utils/b64toBlob";
+import {resources} from "ya-disk";
 
 const Edit = () => {
     const router = useRouter()
@@ -26,6 +28,7 @@ const Edit = () => {
     const [description, setDescription] = useState('')
     const [category, setCategory] = useState(false)
     const [uuid, setUuid] = useState('')
+    const [loading, setLoading] = useState(false)
     const [item, setItem] = useState(null)
 
     useEffect(() => {
@@ -45,52 +48,61 @@ const Edit = () => {
     }, [router.query])
 
     const handleUpload = async (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        axios.get('https://cloud-api.yandex.net/v1/disk/resources/upload?overwrite=true&path='+process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME+'/'+uuid+'.'+e.target.value.split('.').pop(), {
-            headers: {
-                "Authorization": "OAuth "+process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN
-            }
-        }).then(rs => {
-            function b64toBlob(b64Data, contentType, sliceSize) {
-                contentType = contentType || '';
-                sliceSize = sliceSize || 512;
+        const files = e.target.files;
 
-                var byteCharacters = atob(b64Data.split(',')[1]);
-                var byteArrays = [];
+        if(files.length > 3) {
+            alert('Максимальное кол-во картинок - 3')
+            return;
+        }
 
-                for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+        const loadFiles = () => {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i]
+                const reader = new FileReader();
 
-                    var byteNumbers = new Array(slice.length);
-                    for (var i = 0; i < slice.length; i++) {
-                        byteNumbers[i] = slice.charCodeAt(i);
-                    }
-
-                    var byteArray = new Uint8Array(byteNumbers);
-
-                    byteArrays.push(byteArray);
-                }
-
-                return new Blob(byteArrays, {type: contentType});
-            }
-            reader.onload = function(e) {
-                // binary data
-                console.log(e.target.result);
-                axios.put(rs.data.href, b64toBlob(e.target.result), {
-                    headers: {
-                        "Content-Type": file.type,
-                    }
-                }).then(rs => {
-                    console.log(rs)
+                axios.get(
+                    'https://cloud-api.yandex.net/v1/disk/resources/upload?overwrite=true&path='
+                    + process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME
+                    + '/' + uuid + '/'
+                    + i + '.'
+                    + e.target.value.split('.').pop(),
+                    {
+                        headers: {
+                            "Authorization": "OAuth "+process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN
+                        }
+                    }).then(rs => {
+                    reader.onload = function(e) {
+                        axios.put(rs.data.href, b64toBlob(e.target.result), {
+                            headers: {
+                                "Content-Type": file.type,
+                            }
+                        }).then(rs => {
+                            console.log(rs)
+                        })
+                    };
+                    reader.onerror = function(e) {
+                        // error occurred
+                        console.log('Error : ' + e.type);
+                        alert('Произошла ошибка. (' + e.type + ')')
+                    };
+                    reader.readAsDataURL(file);
                 })
-            };
-            reader.onerror = function(e) {
-                // error occurred
-                console.log('Error : ' + e.type);
-                alert('Произошла ошибка. (' + e.type + ')')
-            };
-            reader.readAsDataURL(file);
+            }
+        }
+
+        const createFolderThenUpload = () => {
+            resources.create(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, 'disk:/' + process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME + '/' + uuid).then(() => {
+                loadFiles()
+                setLoading(false)
+            })
+        }
+
+        setLoading(true)
+        resources.remove(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, 'disk:/' + process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME + '/' + uuid, true).then(() => {
+            setTimeout(() => {
+                createFolderThenUpload()
+                setLoading(false)
+            }, 3000)
         })
     }
 
@@ -111,7 +123,8 @@ const Edit = () => {
         <AdminLayout>
             <h1>Обновить digital</h1>
             {item ? <Stack spacing={2} style={{width: 400}}>
-                <input type="file" onChange={handleUpload}/>
+                <input type="file" multiple onChange={handleUpload}/>
+                {loading ? <p>Файлы загружаются...</p> : null}
                 <TextField fullWidth value={name} onChange={e => setName(e.target.value)} label="Название"
                            variant="filled" focused/>
                 <Input type={'number'} fullWidth value={price} onChange={e => setPrice(e.target.value)} label="Цена"

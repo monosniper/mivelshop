@@ -85,18 +85,14 @@ const Add = () => {
             })
         }
 
-        try {
-            setLoading(true)
-            createdFolder ? resources.remove(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, 'disk:/' + process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME + '/' + uuid, true).then(() => {
-                setTimeout(() => {
-                    createFolderThenUpload()
-                    setLoading(false)
-                }, 3000)
-                setCreatedFolder(true)
-            }) : createFolderThenUpload()
-        } catch (e) {
-            loadFiles()
-        }
+        setLoading(true)
+        createdFolder ? resources.remove(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, 'disk:/' + process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME + '/' + uuid, true).then(() => {
+            setTimeout(() => {
+                createFolderThenUpload()
+                setLoading(false)
+            }, 3000)
+            setCreatedFolder(true)
+        }) : createFolderThenUpload()
     }
 
     const handleSubmit = () => {
