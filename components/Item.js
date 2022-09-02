@@ -14,21 +14,21 @@ const Item = ({ item, previews }) => {
             setIsOpen(false)
         })
     }
-
+    console.log(previews)
     return <>
-        <Link href={'/items/'+item._id}>
+        {previews[item.uuid] ? <Link href={'/items/'+item._id}>
             <div className="item-wrapper">
                 <div
                     // onClick={() => setIsOpen(true)}
                     className={"item" + (item.long ? ' long' : '') + (store.activeItem ? (store.activeItem.id === item.id ? ' active' : '') : '')}
-                    style={{backgroundImage: 'url("'+previews[item.uuid]+'")'}}
+                    style={{backgroundImage: 'url("'+previews[item.uuid][0]+'")'}}
                     // className={'item'}
                 >
 
                 </div>
                 <div className="item__caption">{item.name} - <span className="item__price">${item.price}</span></div>
             </div>
-        </Link>
+        </Link> : null}
 
         <Modal
             open={isOpen}

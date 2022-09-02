@@ -87,7 +87,7 @@ function Order({order, qiwi}) {
 const User = ({ logout, user }) => {
     const [showProfile, setShowProfile] = useState(false)
     const qiwiApi = new QiwiBillPaymentsAPI(process.env.NEXT_PUBLIC_QIWI_SECRET_KEY);
-    console.log(qiwiApi)
+
 
     const handleLogout = () => {
         store.setLoggedIn(false)

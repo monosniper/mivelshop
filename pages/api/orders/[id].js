@@ -14,9 +14,9 @@ export default async (req, res) => {
 
                 if (!id) throw "invalid data";
 
-                const item = await Item.deleteOne({_id:id})
+                const item = await Order.deleteOne({_id:id})
 
-                if (!item) throw 'Продукт не найден';
+                if (!item) throw 'Заказ не найден';
 
                 res.status(200).json({ok: true, data: {}});
             } catch (error) {
@@ -32,7 +32,7 @@ export default async (req, res) => {
 
                 const item = await Order.findOne({user:id}).populate('items')
 
-                if (!item) throw 'Продукт не найден';
+                if (!item) throw 'Заказ не найден';
 
                 res.status(200).json({ok: true, data: item});
             } catch (error) {

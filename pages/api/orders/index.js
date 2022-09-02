@@ -10,8 +10,13 @@ export default async (req, res) => {
         case "GET":
             try {
                 const { user } = req.query
+                const filters = {}
 
-                const orders = await Order.find({user}).sort({createdAt: -1}).populate('items');
+                if(user) {
+                    filters.user = user
+                }
+
+                const orders = await Order.find(filters).sort({createdAt: -1}).populate('items');
 
                 res.status(200).json({ok: true, data: orders });
             } catch (error) {
@@ -39,7 +44,7 @@ export default async (req, res) => {
                 ) throw "invalid data";
 
                 const basket = await Basket.findOne({user})
-                console.log(basket.items, basket, user)
+
                 const order = await Order.create(
                     {
                         fio,

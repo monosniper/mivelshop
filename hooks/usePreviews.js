@@ -7,10 +7,16 @@ export default function usePreviews(preview=false) {
     const get = () => {
         list(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, {limit: 999999}).then(rs => {
             const newItems = {}
+
             rs.items.filter(item => item.path.indexOf(process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME) !== -1).forEach(item => {
-                const uuid = item.name.split('.')[0]
-                newItems[uuid] = item[preview ? 'preview' : 'file']
+                // const uuid = item.name.split('.')[0]
+                const uuid = item.path.split('/')[2]
+                if(!Array.isArray(newItems[uuid])) newItems[uuid] = []
+
+                // newItems[uuid] = item[preview ? 'preview' : 'file']
+                newItems[uuid].push(item[preview ? 'preview' : 'file'])
             })
+
             setPreviews(newItems)
         });
     }

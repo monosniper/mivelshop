@@ -17,6 +17,7 @@ const Item = () => {
     const router = useRouter()
     const [item, setItem] = useState(null)
     const [previews, getPreviews] = usePreviews()
+    const [images, setImages] = useState([])
 
     useEffect(() => {
         getPreviews()
@@ -25,15 +26,21 @@ const Item = () => {
     useEffect(() => {
         if(router.query.id) {
             store.requestItem(router.query.id).then(rs => {
-                if(rs.ok) setItem(rs.data)
+                if(rs.ok) {
+                    setItem(rs.data)
+                }
             })
-
         }
     }, [router.query])
 
     const handleBasketClick = () => {
         store.addBasket(item._id)
     }
+
+    useEffect(() => {
+        console.log(item, previews)
+        if(item && previews[item.uuid]) setImages(previews[item.uuid])
+    }, [previews, item])
 
     return (
         <div>
@@ -52,7 +59,7 @@ const Item = () => {
                     </div>
                     <div className="item-block item-body">
                         <div className="item-slider">
-                            <CarouselProvider
+                            {images.length ? <CarouselProvider
                                 naturalSlideWidth={100}
                                 naturalSlideHeight={125}
                                 totalSlides={3}
@@ -60,27 +67,25 @@ const Item = () => {
                                 <div className="item-slider__buttons">
                                     <ButtonBack className={'item-slider__button'}>
                                         <IconButton size={'large'} aria-label="delete">
-                                            <AiOutlineLeft />
+                                            <AiOutlineLeft/>
                                         </IconButton>
                                     </ButtonBack>
                                     <ButtonNext className={'item-slider__button'}>
                                         <IconButton size={'large'} aria-label="delete">
-                                            <AiOutlineRight />
+                                            <AiOutlineRight/>
                                         </IconButton>
                                     </ButtonNext>
                                 </div>
                                 <Slider>
-                                    <Slide index={0}>
-                                        <img src={previews[item.uuid]} alt={item.name} />
-                                    </Slide>
-                                    <Slide index={1}>
-                                        <img src={previews[item.uuid]} alt={item.name} />
-                                    </Slide>
-                                    <Slide index={2}>
-                                        <img src={previews[item.uuid]} alt={item.name} />
-                                    </Slide>
+                                    {images.map((src, i) =>
+                                    {
+                                        return <Slide key={'src-' + i} index={i}>
+                                            <img src={src} alt={item.name}/>
+                                        </Slide>
+
+                                    })}
                                 </Slider>
-                            </CarouselProvider>
+                            </CarouselProvider> : null}
                         </div>
                         <div className="item-description">
                             <p>{item.description}</p>

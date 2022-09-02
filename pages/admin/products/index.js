@@ -5,6 +5,7 @@ import {AiFillCheckCircle} from "react-icons/ai";
 import itemService from "../../../services/itemService";
 import categoryService from "../../../services/categoryService";
 import {list, meta} from "ya-disk";
+import usePreviews from "../../../hooks/usePreviews";
 
 const getCategoryName = async (id) => {
     const category = await categoryService.getOne(id)
@@ -13,19 +14,13 @@ const getCategoryName = async (id) => {
 
 const Index = () => {
     const [items, setItems] = useState(null);
-    const [previews, setPreviews] = useState({});
+    const [previews, getPreviews] = usePreviews(true);
 
     useEffect(() => {
         itemService.getAll('products').then(x => {
             setItems(x.data)
-            const data = list(process.env.NEXT_PUBLIC_YANDEX_DISK_OAUTH_TOKEN, {limit: 999999}).then(rs => {
-                const newItems = {}
-                rs.items.filter(item => item.path.indexOf(process.env.NEXT_PUBLIC_YANDEX_DISK_FOLDER_NAME) !== -1).forEach(item => {
-                    const uuid = item.name.split('.')[0]
-                    newItems[uuid] = item.preview
-                })
-                setPreviews(newItems)
-            });
+
+            getPreviews()
         });
     }, []);
 

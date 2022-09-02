@@ -32,7 +32,7 @@ export default async (req, res) => {
                     return;
                 }
 
-                let items = await Item.find(filters, null, {limit, skip: offset}).populate('category');
+                let items = await Item.find(filters, null, {limit, skip: offset}).sort({createdAt: -1}).populate('category');
 
                 res.status(200).json({ok: true, data: items });
             } catch (error) {
