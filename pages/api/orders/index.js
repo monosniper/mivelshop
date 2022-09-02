@@ -1,6 +1,7 @@
 import dbConnect from "../../../utils/db";
 import Basket from "../../../models/basket";
 import Order from "../../../models/order";
+import Item from "../../../models/item";
 
 dbConnect();
 
@@ -16,7 +17,7 @@ export default async (req, res) => {
                     filters.user = user
                 }
 
-                const orders = await Order.find(filters).sort({createdAt: -1}).populate('items');
+                const orders = await Order.find(filters).sort({createdAt: -1}).populate({ path: 'items', model: Item })
 
                 res.status(200).json({ok: true, data: orders });
             } catch (error) {

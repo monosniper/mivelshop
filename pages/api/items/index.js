@@ -1,5 +1,6 @@
 import dbConnect from "../../../utils/db";
 import Item from "../../../models/item";
+import Category from "../../../models/category";
 
 dbConnect();
 
@@ -32,7 +33,8 @@ export default async (req, res) => {
                     return;
                 }
 
-                let items = await Item.find(filters, null, {limit, skip: offset}).sort({createdAt: -1}).populate('category');
+                let items = await Item.find(filters, null, {limit, skip: offset}).sort({createdAt: -1})
+                    .populate({ path: 'category', model: Category });
 
                 res.status(200).json({ok: true, data: items });
             } catch (error) {

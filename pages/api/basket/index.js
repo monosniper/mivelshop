@@ -1,5 +1,7 @@
 import dbConnect from "../../../utils/db";
 import Basket from "../../../models/basket";
+import Category from "../../../models/category";
+import Item from "../../../models/item";
 
 dbConnect();
 
@@ -16,7 +18,7 @@ export default async (req, res) => {
                     {user:user_id},
                     {$pull: {items: {$eq: item_id}}},
                     {new: true}
-                ).populate('items')
+                ).populate({ path: 'items', model: Item })
 
                 if (!basket) throw 'Корзина не найдена';
 
@@ -36,7 +38,7 @@ export default async (req, res) => {
                     {user:user_id},
                     {$push: {items: item_id}},
                     {new: true}
-                ).populate('items')
+                ).populate({ path: 'items', model: Item })
 
                 if (!basket) throw 'Корзина не найдена';
 

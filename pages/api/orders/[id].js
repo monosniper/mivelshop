@@ -30,7 +30,7 @@ export default async (req, res) => {
 
                 if (!id) throw "invalid data";
 
-                const item = await Order.findOne({user:id}).populate('items')
+                const item = await Order.findOne({user:id}).populate({ path: 'items', model: Item })
 
                 if (!item) throw 'Заказ не найден';
 

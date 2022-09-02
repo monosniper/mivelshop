@@ -1,5 +1,6 @@
 import dbConnect from "../../../utils/db";
 import Basket from "../../../models/basket";
+import Item from "../../../models/item";
 
 dbConnect();
 
@@ -12,7 +13,7 @@ export default async (req, res) => {
 
                 if (!user_id) throw "invalid data";
 
-                const basket = await Basket.findOne({user:user_id}).populate('items')
+                const basket = await Basket.findOne({user:user_id}).populate({ path: 'items', model: Item })
 
                 if (!basket) {
                     await Basket.create({user:user_id,items:[]})
