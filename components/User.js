@@ -103,14 +103,7 @@ const User = ({ logout, user }) => {
         <React.Fragment>
             <div onClick={() => setShowProfile(true)} className="user">
                 <div className="user__name">{user.name}</div>
-                <div className="user__avatar">
-                    <Image
-                        src={'/../public/assets/img/avatar.png'}
-                        width={60}
-                        height={60}
-                        alt={user.name}
-                    />
-                </div>
+                <div className="user__avatar"></div>
             </div>
 
             <Drawer

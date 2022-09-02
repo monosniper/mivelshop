@@ -148,6 +148,12 @@ body {
   cursor: pointer;
   align-items: center;
   font-family: "Montserrat Alternates", sans-serif;
+
+  &__avatar {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("/assets/img/avatar.png");
+  }
 }
 
 .item-wrapper {
