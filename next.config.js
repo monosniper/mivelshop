@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['localhost', 'inshop-online.com'],
+    domains: [
+        'localhost',
+        'inshop-online.com',
+        'downloader.disk.yandex.ru',
+        'yadi.sk',
+    ],
     formats: ['image/avif', 'image/webp'],
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
