@@ -36,10 +36,9 @@ const Index = () => {
             <table className="table table-striped table-responsive">
                 <thead>
                 <tr>
-                    <th style={{ width: '20%' }}></th>
-                    <th style={{ width: '10%' }}>Название</th>
+                    <th style={{ width: '20%' }}>Название</th>
                     <th style={{ width: '10%' }}>Цена</th>
-                    <th style={{ width: '30%' }}>Описание</th>
+                    <th style={{ width: '40%' }}>Описание</th>
                     <th style={{ width: '10%' }}>Категория</th>
                     <th style={{ width: '10%' }}>Длинный</th>
                     <th style={{ width: '10%' }}></th>
@@ -47,14 +46,14 @@ const Index = () => {
                 </thead>
                 <tbody>
                 {items && items.map(item => previews[item.uuid] ? <tr key={item._id}>
-                        <td><img style={{maxWidth: 120}} src={previews[item.uuid][0]} alt={item.name}/></td>
+                        {/*<td><img style={{maxWidth: 120}} src={previews[item.uuid][0]} alt={item.name}/></td>*/}
                         <td>{item.name}</td>
                         <td>${item.price}</td>
                         <td>{item.description}</td>
                         <td>{item.category.name}</td>
                         <td>{item.long ? <AiFillCheckCircle /> : null}</td>
                         <td style={{ whiteSpace: 'nowrap' }}>
-                            <div style={{display:"flex",alignItems:"center",gap:'.3rem'}}>
+                            <div style={{display:"flex",alignItems:"center",gap:'.3rem',flexWrap:'wrap'}}>
                                 <Link href={"digital/"+item._id} className="btn btn-sm btn-success">Редактировать</Link>
                                 <button onClick={() => deleteItem(item._id)} className="btn btn-sm btn-danger btn-delete-user" disabled={item.isDeleting}>
                                     {item.isDeleting
@@ -62,6 +61,9 @@ const Index = () => {
                                         : <span>Удалить</span>
                                     }
                                 </button>
+                                <Link target={'_blank'} href={'/items/'+item._id}>
+                                    <button className="btn btn-sm btn-primary">Посмотреть</button>
+                                </Link>
                             </div>
                         </td>
                     </tr> : null)}

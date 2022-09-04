@@ -13,7 +13,8 @@ export default function usePreviews(preview=false) {
                 const uuid = item.path.split('/')[2]
                 if(!Array.isArray(newItems[uuid])) newItems[uuid] = []
                 // newItems[uuid] = item[preview ? 'preview' : 'file']
-                newItems[uuid].push(item[preview ? 'preview' : 'file'])
+                // newItems[uuid].push(item[preview ? 'preview' : 'file'])
+                newItems[uuid].push(item.file)
                 // newItems[uuid].push(item.path)
             })
             console.log(newItems)

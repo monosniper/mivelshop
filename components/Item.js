@@ -101,9 +101,9 @@ const Item = ({ item, previews }) => {
                 >
                     <Image
                         src={previews[item.uuid][0]}
-                        alt={'hello'}
-                        width={100}
-                        height={100}
+                        alt={item.name}
+                        layout='fill'
+                        objectFit='contain'
                     />
                 </div>
                 <div className="item__caption">{item.name} - <span className="item__price">${item.price}</span></div>

@@ -80,7 +80,12 @@ const Item = () => {
                                     {images.map((src, i) =>
                                     {
                                         return <Slide key={'src-' + i} index={i}>
-                                            <img src={src} alt={item.name}/>
+                                            <Image
+                                                src={src}
+                                                alt={item.name}
+                                                layout='fill'
+                                                objectFit='contain'
+                                            />
                                         </Slide>
 
                                     })}
