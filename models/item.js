@@ -5,7 +5,10 @@ const ItemSchema = new mongoose.Schema({
     type: String,
     name: String,
     price: Number,
-    long: Boolean,
+    height: {
+        type: Number,
+        default: 350,
+    },
     description: String,
     category: {type: Schema.Types.ObjectId, ref: 'Category'},
     createdAt: {

@@ -5,6 +5,7 @@ const OrderSchema = new mongoose.Schema({
     address: String,
     post: String,
     phone: String,
+    billId: String,
     payed: {
         type: Boolean,
         default: false

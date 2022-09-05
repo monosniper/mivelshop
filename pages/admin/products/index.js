@@ -48,7 +48,7 @@ const Index = () => {
                     <th style={{ width: '10%' }}>Цена</th>
                     <th style={{ width: '40%' }}>Описание</th>
                     <th style={{ width: '10%' }}>Категория</th>
-                    <th style={{ width: '10%' }}>Длинный</th>
+                    <th style={{ width: '10%' }}>Высота</th>
                     <th style={{ width: '10%' }}></th>
                 </tr>
                 </thead>
@@ -69,7 +69,7 @@ const Index = () => {
                     <td>${item.price}</td>
                     <td>{item.description}</td>
                     <td>{item.category.name}</td>
-                    <td>{item.long ? <AiFillCheckCircle /> : null}</td>
+                    <td>{item.height}</td>
                     <td style={{ whiteSpace: 'nowrap' }}>
                         <div style={{display:"flex",alignItems:"center",gap:'.3rem',flexWrap:'wrap'}}>
                             <Link href={"products/"+item._id} className="btn btn-sm btn-success">Редактировать</Link>

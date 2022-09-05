@@ -50,32 +50,32 @@ export default async (req, res) => {
                     name,
                     type,
                     price,
-                    long,
+                    height,
                     description,
                     category,
                 } = req.body;
 
                 if (
                     !uuid
-                    && !name
-                    && !type
-                    && !price
-                    && !long
-                    && !description
-                    && !category
+                    || !name
+                    || !type
+                    || !price
+                    || !height
+                    || !description
+                    || !category
                 ) throw "invalid data";
-                const client = await Item.create(
+                const item = await Item.create(
                     {
                         uuid,
                         name,
                         type,
                         price,
-                        long,
+                        height,
                         description,
                         category,
                     });
 
-                res.status(201).json({ok: true, data:client});
+                res.status(201).json({ok: true, data:item});
             } catch (error) {
                 console.log(error);
                 res.status(500).json({ ok: false, error });

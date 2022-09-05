@@ -55,7 +55,7 @@ const Item = () => {
                 {item ? <>
                     <div className="item-block item-header">
                         <span className="item-header__name">{item.name}</span>
-                        <span className="item-header__price">- {item.price}$</span>
+                        <span className="item-header__price">- {item.price}₽</span>
                     </div>
                     <div className="item-block item-body">
                         <div className="item-slider">

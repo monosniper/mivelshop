@@ -19,7 +19,7 @@ export default async (req, res) => {
           if (err) res.status(500).json({ok: false, error: 'Не получилось войти'});;
           const token = jwt.sign(
               {
-                userId: user.userId,
+                userId: user._id,
                 isAdmin: user.isAdmin,
                 name: user.name,
                 email: user.email,

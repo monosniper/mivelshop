@@ -26,6 +26,7 @@ const nextConfig = {
 
     return config
   },
+  target: 'server'
 }
 
 module.exports = nextConfig

@@ -40,7 +40,7 @@ const Index = () => {
                     <th style={{ width: '10%' }}>Цена</th>
                     <th style={{ width: '40%' }}>Описание</th>
                     <th style={{ width: '10%' }}>Категория</th>
-                    <th style={{ width: '10%' }}>Длинный</th>
+                    <th style={{ width: '10%' }}>Высота</th>
                     <th style={{ width: '10%' }}></th>
                 </tr>
                 </thead>

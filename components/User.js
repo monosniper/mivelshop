@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Image from "next/image";
 import {
     Box,
     Button,
@@ -9,31 +8,31 @@ import {
     MenuList,
     Modal,
     Stack,
-    TextField,
     Typography
 } from "@mui/material";
 import {observer} from "mobx-react";
 import store from "../store/store";
 import {Link} from "./Link";
-import QiwiBillPaymentsAPI from '@qiwi/bill-payments-node-js-sdk';
 
-function Order({order, qiwi}) {
+function Order({order}) {
     const [isOpen, setIsOpen] = useState(false)
 
     const handleOrder = () => {
-        const fields = {
-            amount: store.getBasketSum(order.items),
-            currency: 'RUB',
+        const params = {
+            public_key: process.env.NEXT_PUBLIC_QIWI_PUBLIC_KEY,
+            'customFields[themeCode]': process.env.NEXT_PUBLIC_QIWI_THEME_CODE,
+            successUrl: 'http://localhost:3004/success',
             comment: 'Оплата товаров в MivelShop - ' + order.items.map(item => item.name).join(', '),
-            expirationDateTime: qiwi.getLifetimeByDay(1),
-            email: order.email,
             account : '79643210393',
-            successUrl: 'http://localhost:3004/success'
-        };
+            phone: order.phone,
+            email: order.email,
+            billId: order.billId,
+            amount: store.getBasketSum(order.items),
+        }
 
-        qiwi.createBill( qiwi.generateId(), fields ).then( data => {
-            console.log(data)
-        });
+        let url = 'https://oplata.qiwi.com/create?' + new URLSearchParams(params).toString();
+
+        window.location.replace(url)
     }
 
     return <>
@@ -73,7 +72,7 @@ function Order({order, qiwi}) {
                     </Typography>
                     <Typography className={'order-row'} component="p">
                         <strong>Итоговая сумма:</strong>
-                        {store.getBasketSum(order.items)}$
+                        {store.getBasketSum(order.items)}₽
                     </Typography>
                 </Stack>
                 <div style={{textAlign: "center"}}>
@@ -86,8 +85,6 @@ function Order({order, qiwi}) {
 
 const User = ({ logout, user }) => {
     const [showProfile, setShowProfile] = useState(false)
-    const qiwiApi = new QiwiBillPaymentsAPI(process.env.NEXT_PUBLIC_QIWI_SECRET_KEY);
-
 
     const handleLogout = () => {
         store.setLoggedIn(false)
@@ -136,7 +133,7 @@ const User = ({ logout, user }) => {
                 onClose={() => store.setIsOrdersDrawerOpen(false)}
             >
                 {store.orders.map((order, i) => <Order qiwi={qiwiApi} key={'order-'+i} order={order} />)}
-                {!store.orders.length ? <p>У вас еще не было заказов</p> : null}
+                {!store.orders.length ? <p style={{padding: '1rem'}}>У вас еще не было заказов</p> : null}
             </Drawer>
         </React.Fragment>
     );

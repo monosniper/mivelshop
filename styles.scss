@@ -261,10 +261,10 @@ body {
     opacity: .3;
   }
 
-  &.long {
-    grid-row: span 2;
-    height: 720px;
-  }
+  //&.long {
+  //  grid-row: span 2;
+  //  height: 720px;
+  //}
 }
 
 .items {
@@ -378,6 +378,7 @@ body {
   background-position: center;
   border-radius: 10px;
   border: 1px solid #ccc;
+  position: relative;
 }
 .modal {
   transform: translate(-50%, -50%);

@@ -92,11 +92,11 @@ const Item = ({ item, previews }) => {
 
     return <>
         {previews[item.uuid] ? <Link href={'/items/'+item._id}>
-            <div className="item-wrapper">
+            <div className="item-wrapper" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
                 <div
                     // onClick={() => setIsOpen(true)}
                     className={"item" + (item.long ? ' long' : '') + (store.activeItem ? (store.activeItem.id === item.id ? ' active' : '') : '')}
-                    style={{backgroundImage: src}}
+                    style={{height: item.height + 'px'}}
                     // className={'item'}
                 >
                     <Image
@@ -106,7 +106,7 @@ const Item = ({ item, previews }) => {
                         objectFit='contain'
                     />
                 </div>
-                <div className="item__caption">{item.name} - <span className="item__price">${item.price}</span></div>
+                <div className="item__caption">{item.name} - <span className="item__price">{item.price}₽</span></div>
             </div>
         </Link> : null}
     </>;

@@ -23,7 +23,15 @@ function BasketItem({previews, item}) {
         store.removeBasket(item._id)
     }
 
-    return <div className="basket-item" style={{backgroundImage: 'url("'+previews[item.uuid]+'")'}}>
+    return <div className="basket-item"
+                // style={{backgroundImage: 'url("'+previews[item.uuid]+'")'}}
+    >
+        <Image
+            src={previews[item.uuid][0]}
+            alt={item.name}
+            layout='fill'
+            objectFit='contain'
+        />
         <IconButton className={'basket-del-btn'} onClick={handleDelete} aria-label="delete">
             <AiFillDelete />
         </IconButton>
@@ -55,7 +63,7 @@ function BasketFooter() {
 
     return <>
         <Typography sx={{mb:1}} variant={'h5'}>
-            Итого: {store.getBasketSum()}$
+            Итого: {store.getBasketSum()}₽
         </Typography>
         <Button onClick={() => setIsOpen(true)} color={'primary'} variant={'contained'}>Оформить заказ</Button>
 

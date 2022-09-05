@@ -45,7 +45,7 @@ export default async (req, res) => {
                         });
 
                     const token = jwt.sign(
-                        {userId: user.id, isAdmin: user.isAdmin, name: user.name, email: user.email},
+                        {userId: user._id, isAdmin: user.isAdmin, name: user.name, email: user.email},
                         process.env.NEXT_PUBLIC_JWT_SECRET,
                         {
                             expiresIn: 3000, //50 minutes
