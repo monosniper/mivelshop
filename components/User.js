@@ -132,7 +132,7 @@ const User = ({ logout, user }) => {
                 style={{width:'90%'}}
                 onClose={() => store.setIsOrdersDrawerOpen(false)}
             >
-                {store.orders.map((order, i) => <Order qiwi={qiwiApi} key={'order-'+i} order={order} />)}
+                {store.orders.map((order, i) => <Order key={'order-'+i} order={order} />)}
                 {!store.orders.length ? <p style={{padding: '1rem'}}>У вас еще не было заказов</p> : null}
             </Drawer>
         </React.Fragment>
