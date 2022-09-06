@@ -10,7 +10,7 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Artist shop</title>
+        <title>MivelShop</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 

@@ -3,9 +3,11 @@ import store from "../store/store";
 import { motion } from "framer-motion/dist/framer-motion"
 import {observer} from "mobx-react";
 import {toJS} from "mobx";
+import {useRouter} from "next/router";
 
 const Categories = () => {
     const data = useMemo(() => store.categories, [store.categories, store.type])
+    const router = useRouter()
 
     useEffect(() => {
         if(store.categories.length) {
@@ -14,6 +16,7 @@ const Categories = () => {
     }, [store.categories])
 
     const handleClick = (id) => {
+        if(router.pathname !== '/') router.push('/')
         store.setCategory(id)
     }
 
