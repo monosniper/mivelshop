@@ -18,6 +18,7 @@ const Items = ({ category }) => {
     const [offset, setOffset] = useState(0)
     const [width, height] = useWindowSize();
     const [columns, setColumns] = useState(3);
+    const [loading, setLoading] = useState(true);
 
     const gap = 20;
     const columnWrapper = {};
@@ -98,7 +99,7 @@ const Items = ({ category }) => {
             })
         }
     }, [store.category])
-
+    console.log(result)
     return (
         <InfiniteScroll
             dataLength={list.length}
@@ -106,10 +107,32 @@ const Items = ({ category }) => {
             hasMore={currentCount !== total}
             loader={null}
             style={{display:'flex'}}
-            // className="items"
+            className="items"
             // className="masonry bordered"
         >
-            {result}
+            {result.filter(rs => rs.props.children.length).length ? result : <>
+                <div
+                    style={{
+                        marginLeft: `${0}px`,
+                        flex: 1,
+                    }}>
+                    <Skeleton height={350}/>
+                </div>
+                <div
+                    style={{
+                        marginLeft: `${gap}px`,
+                        flex: 1,
+                    }}>
+                    <Skeleton height={350}/>
+                </div>
+                <div
+                    style={{
+                        marginLeft: `${gap}px`,
+                        flex: 1,
+                    }}>
+                    <Skeleton height={350}/>
+                </div>
+            </>}
             {/*{list.map((item, i) => (*/}
             {/*    <motion.div className={'brick'} key={'item-' + i} animate={{*/}
             {/*        display: item.type === store.type && item.category._id === store.category ? 'block' : 'none',*/}

@@ -94,10 +94,8 @@ const Item = ({ item, previews }) => {
         {previews[item.uuid] ? <Link href={'/items/'+item._id}>
             <div className="item-wrapper" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
                 <div
-                    // onClick={() => setIsOpen(true)}
-                    className={"item" + (item.long ? ' long' : '') + (store.activeItem ? (store.activeItem.id === item.id ? ' active' : '') : '')}
+                    className={"item"}
                     style={{height: item.height + 'px'}}
-                    // className={'item'}
                 >
                     <Image
                         src={previews[item.uuid][0]}
