@@ -18,7 +18,7 @@ const Items = ({ category }) => {
     const [offset, setOffset] = useState(0)
     const [width, height] = useWindowSize();
     const [columns, setColumns] = useState(3);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState([]);
 
     const gap = 20;
     const columnWrapper = {};
@@ -33,6 +33,20 @@ const Items = ({ category }) => {
             setColumns(3)
         }
     }, [width])
+
+    useEffect(() => {
+        const newLoading = []
+        for (let i = 0; i < columns; i++) {
+            newLoading.push(<div
+                style={{
+                    marginLeft: `${i > 0 ? gap : 0}px`,
+                    flex: 1,
+                }}>
+                <Skeleton height={350}/>
+            </div>);
+        }
+        setLoading(newLoading)
+    }, [columns])
 
     for (let i = 0; i < columns; i++) {
         columnWrapper[`column${i}`] = [];
@@ -109,15 +123,7 @@ const Items = ({ category }) => {
             className="items"
             // className="masonry bordered"
         >
-            {result.filter(rs => rs.props.children.length).length ? result : [...Array(columns).keys()].map(i => {
-                    <div
-                        style={{
-                            marginLeft: `${i > 0 ? gap : 0}px`,
-                            flex: 1,
-                        }}>
-                        <Skeleton height={350}/>
-                    </div>
-                }) }
+            {result.filter(rs => rs.props.children.length).length ? result : loading }
             {/*{list.map((item, i) => (*/}
             {/*    <motion.div className={'brick'} key={'item-' + i} animate={{*/}
             {/*        display: item.type === store.type && item.category._id === store.category ? 'block' : 'none',*/}
