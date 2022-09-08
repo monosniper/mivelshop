@@ -66,7 +66,6 @@ const Items = ({ category }) => {
 
     const loadItems = (_new=false) => {
         if(_new) setOffset(() => 0)
-        console.log(_new, offset)
         if(store.category) {
             return store.requestItems({
                 offset: _new ? 0 : offset,
@@ -99,7 +98,7 @@ const Items = ({ category }) => {
             })
         }
     }, [store.category])
-    console.log(result)
+
     return (
         <InfiniteScroll
             dataLength={list.length}
@@ -110,29 +109,15 @@ const Items = ({ category }) => {
             className="items"
             // className="masonry bordered"
         >
-            {result.filter(rs => rs.props.children.length).length ? result : <>
-                <div
-                    style={{
-                        marginLeft: `${0}px`,
-                        flex: 1,
-                    }}>
-                    <Skeleton height={350}/>
-                </div>
-                <div
-                    style={{
-                        marginLeft: `${gap}px`,
-                        flex: 1,
-                    }}>
-                    <Skeleton height={350}/>
-                </div>
-                <div
-                    style={{
-                        marginLeft: `${gap}px`,
-                        flex: 1,
-                    }}>
-                    <Skeleton height={350}/>
-                </div>
-            </>}
+            {result.filter(rs => rs.props.children.length).length ? result : [...Array(columns).keys()].map(i => {
+                    <div
+                        style={{
+                            marginLeft: `${i > 0 ? gap : 0}px`,
+                            flex: 1,
+                        }}>
+                        <Skeleton height={350}/>
+                    </div>
+                }) }
             {/*{list.map((item, i) => (*/}
             {/*    <motion.div className={'brick'} key={'item-' + i} animate={{*/}
             {/*        display: item.type === store.type && item.category._id === store.category ? 'block' : 'none',*/}
