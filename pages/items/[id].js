@@ -6,18 +6,48 @@ import store from "../../store/store";
 import {useRouter} from "next/router";
 import Banner from "../../components/Banner";
 import {observer} from "mobx-react";
-import {Button, IconButton} from "@mui/material";
+import {Button, IconButton, Stack} from "@mui/material";
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import Image from "next/image";
 import usePreviews from "../../hooks/usePreviews";
 import {AiOutlineLeft, AiOutlineRight} from "react-icons/ai";
 import Footer from "../../components/Footer";
+import QiwiBillPaymentsAPI from "@qiwi/bill-payments-node-js-sdk";
+import OrderModal from "../../components/OrderModal";
 
 const Item = () => {
     const router = useRouter()
     const [item, setItem] = useState(null)
     const [previews, getPreviews] = usePreviews()
     const [images, setImages] = useState([])
+    const [isOpen, setIsOpen] = useState(false)
+    const qiwi = new QiwiBillPaymentsAPI(process.env.NEXT_PUBLIC_QIWI_SECRET_KEY);
+
+    const handleSubmit = (data) => {
+        store.createOrder({
+            ...data,
+            billId: qiwi.generateId(),
+            items: [item._id]
+        }, true).then(rs => {
+            if(rs.ok) {
+                setIsOpen(false)
+                const params = {
+                    public_key: process.env.NEXT_PUBLIC_QIWI_PUBLIC_KEY,
+                    'customFields[themeCode]': process.env.NEXT_PUBLIC_QIWI_THEME_CODE,
+                    // successUrl: 'http://localhost:3004/success',
+                    successUrl: 'https://mivelshop.vercel.app/success',
+                    comment: 'Оплата товара в MivelShop - ' + item.name,
+                    account : '79643210393',
+                    billId: rs.data.billId,
+                    amount: item.price,
+                }
+
+                let url = 'https://oplata.qiwi.com/create?' + new URLSearchParams(params).toString();
+
+                window.location.replace(url)
+            }
+        })
+    }
 
     useEffect(() => {
         getPreviews()
@@ -37,8 +67,11 @@ const Item = () => {
         store.addBasket(item._id)
     }
 
+    const handleBuyClick = () => {
+        setIsOpen(true)
+    }
+
     useEffect(() => {
-        console.log(item, previews)
         if(item && previews[item.uuid]) setImages(previews[item.uuid])
     }, [previews, item])
 
@@ -62,9 +95,9 @@ const Item = () => {
                             {images.length ? <CarouselProvider
                                 naturalSlideWidth={100}
                                 naturalSlideHeight={125}
-                                totalSlides={3}
+                                totalSlides={images.length}
                             >
-                                <div className="item-slider__buttons">
+                                {images.length > 1 ? <div className="item-slider__buttons">
                                     <ButtonBack className={'item-slider__button'}>
                                         <IconButton size={'large'} aria-label="delete">
                                             <AiOutlineLeft/>
@@ -75,7 +108,7 @@ const Item = () => {
                                             <AiOutlineRight/>
                                         </IconButton>
                                     </ButtonNext>
-                                </div>
+                                </div> : null}
                                 <Slider>
                                     {images.map((src, i) =>
                                     {
@@ -94,13 +127,18 @@ const Item = () => {
                         </div>
                         <div className="item-description">
                             <p>{item.description}</p>
-                            {store.loggedIn ? <div className="item-footer">
-                                <Button onClick={handleBasketClick} variant={'contained'} size={'large'} color={'primary'}>Добавить в корзину</Button>
-                            </div> : null}
+                            <div className="item-footer">
+                                <Button onClick={handleBuyClick} variant={'contained'} size={'large'} color={'primary'}>Купить</Button>
+                                {store.loggedIn ?
+                                    <Button onClick={handleBasketClick} variant={'contained'} size={'large'} color={'primary'}>Добавить в корзину</Button>
+                                    : null}
+                            </div>
                         </div>
                     </div>
                 </> : <p>Загрузка</p>}
             </Container>
+
+            <OrderModal isOpen={isOpen} setIsOpen={setIsOpen} handleSubmit={handleSubmit} />
 
             <div className="bg" style={{backgroundImage: 'url("/assets/img/bg.png")'}}></div>
             <Footer />

@@ -34,6 +34,8 @@ export default async (req, res) => {
                     post,
                     phone,
                     user,
+                    billId,
+                    items,
                 } = req.body;
 
                 if (
@@ -41,10 +43,9 @@ export default async (req, res) => {
                     || !address
                     || !post
                     || !phone
-                    || !user
+                    || !billId
+                    || !items
                 ) throw "invalid data";
-
-                const basket = await Basket.findOne({user})
 
                 const order = await Order.create(
                     {
@@ -53,11 +54,16 @@ export default async (req, res) => {
                         post,
                         phone,
                         user,
-                        items: basket.items,
+                        billId,
+                        items,
                     });
 
                 // Clear basket after order creation
-                await Basket.findOneAndUpdate({user},{items:[]})
+                try {
+                    await Basket.findOneAndUpdate({user},{items:[]})
+                } catch (e) {
+                    console.log()
+                }
 
                 res.status(201).json({ok: true, data: order});
             } catch (error) {

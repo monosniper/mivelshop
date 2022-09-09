@@ -121,10 +121,10 @@ class Store {
         })
     }
 
-    async createOrder(data) {
+    async createOrder(data, oneTimePay=false) {
         return await axios.post($apiRoutes.orders.create, {
             ...data,
-            user: this.user.id
+            user: oneTimePay? null : this.user.id
         }).then(rs => {
             if(rs.data.ok) this.setBasket([])
             return rs.data

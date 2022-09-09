@@ -117,6 +117,7 @@ const Add = () => {
                 <input max={3} multiple type="file" onChange={handleUpload}/>
                 {loading ? <p>Файлы загружаются...</p> : null}
                 <TextField fullWidth value={name} onChange={e => setName(e.target.value)} label="Название" variant="filled" focused />
+                <InputLabel>Цена</InputLabel>
                 <Input type={'number'} fullWidth value={price} onChange={e => setPrice(e.target.value)} label="Цена" variant="filled"/>
                 <span>Высота</span>
                 <Input fullWidth value={height} type={'number'} onChange={e => setHeight(e.target.value)} label="Высота" variant="filled" />

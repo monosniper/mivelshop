@@ -24,12 +24,13 @@ const Edit = () => {
     const router = useRouter()
     const [name, setName] = useState('')
     const [price, setPrice] = useState('')
-    const [long, setLong] = useState(false)
+    const [height, setHeight] = useState(false)
     const [description, setDescription] = useState('')
     const [category, setCategory] = useState(false)
     const [uuid, setUuid] = useState('')
     const [loading, setLoading] = useState(false)
     const [item, setItem] = useState(null)
+    const files_limit = 10
 
     useEffect(() => {
         if(router.query.id) {
@@ -38,7 +39,7 @@ const Edit = () => {
                     setItem(rs.data)
                     setName(rs.data.name)
                     setPrice(rs.data.price)
-                    setLong(rs.data.long)
+                    setHeight(rs.data.height)
                     setDescription(rs.data.description)
                     setCategory(rs.data.category)
                     setUuid(rs.data.uuid)
@@ -50,8 +51,8 @@ const Edit = () => {
     const handleUpload = async (e) => {
         const files = e.target.files;
 
-        if(files.length > 3) {
-            alert('Максимальное кол-во картинок - 3')
+        if(files.length > files_limit) {
+            alert('Максимальное кол-во картинок - '+files_limit)
             return;
         }
 
@@ -102,7 +103,7 @@ const Edit = () => {
             setTimeout(() => {
                 createFolderThenUpload()
                 setLoading(false)
-            }, 3000)
+            }, files_limit * 700)
         })
     }
 
@@ -110,7 +111,7 @@ const Edit = () => {
         itemService.update(router.query.id, {
             name,
             price,
-            long,
+            height,
             description,
             category,
         }).then(rs => {
@@ -127,10 +128,10 @@ const Edit = () => {
                 {loading ? <p>Файлы загружаются...</p> : null}
                 <TextField fullWidth value={name} onChange={e => setName(e.target.value)} label="Название"
                            variant="filled" focused/>
-                <Input type={'number'} fullWidth value={price} onChange={e => setPrice(e.target.value)} label="Цена"
-                       variant="filled"/>
-                <span>Длинный</span>
-                <Switch checked={long} onChange={e => setLong(e.target.checked)}/>
+                <InputLabel>Цена</InputLabel>
+                <Input type={'number'} fullWidth value={price} onChange={e => setPrice(e.target.value)} label="Цена" variant="filled"/>
+                <span>Высота</span>
+                <Input fullWidth value={height} type={'number'} onChange={e => setHeight(e.target.value)} label="Высота" variant="filled" />
                 <TextareaAutosize
                     className={'textarea'} placeholder={'Описание'} onChange={e => setDescription(e.target.value)}
                     value={description}

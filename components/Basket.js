@@ -17,6 +17,8 @@ import store from "../store/store";
 import {observer} from "mobx-react";
 import usePreviews from "../hooks/usePreviews";
 import {AiFillDelete} from "react-icons/ai";
+import QiwiBillPaymentsAPI from "@qiwi/bill-payments-node-js-sdk";
+import OrderModal from "./OrderModal";
 
 function BasketItem({previews, item}) {
     const handleDelete = () => {
@@ -40,17 +42,13 @@ function BasketItem({previews, item}) {
 
 function BasketFooter() {
     const [isOpen, setIsOpen] = useState(false)
-    const [fio, setFio] = useState('')
-    const [address, setAddress] = useState('')
-    const [post, setPost] = useState('')
-    const [phone, setPhone] = useState('')
+    const qiwi = new QiwiBillPaymentsAPI(process.env.NEXT_PUBLIC_QIWI_SECRET_KEY);
 
-    const handleSubmit = () => {
+    const handleSubmit = (data) => {
         store.createOrder({
-            fio,
-            address,
-            post,
-            phone,
+            ...data,
+            items: store.basket.map(item => item._id),
+            billId: qiwi.generateId(),
         }).then(rs => {
             if(rs.ok) {
                 store.setBasket([])
@@ -67,25 +65,7 @@ function BasketFooter() {
         </Typography>
         <Button onClick={() => setIsOpen(true)} color={'primary'} variant={'contained'}>Оформить заказ</Button>
 
-        <Modal
-            hideBackdrop
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-        >
-            <Box className={'modal'}>
-                <Typography sx={{mb:3}} variant="h6" component="h2">
-                    Оформление заказа
-                </Typography>
-                <Stack spacing={2} sx={{mb:3}}>
-                    <TextField value={fio} onChange={(e) => setFio(e.target.value)} fullWidth  label="ФИО" focused />
-                    <TextField value={address} onChange={(e) => setAddress(e.target.value)} fullWidth  label="Адрес доставки"  />
-                    <TextField value={post} onChange={(e) => setPost(e.target.value)} fullWidth  label="Отделение почты"  />
-                    <TextField value={phone} onChange={(e) => setPhone(e.target.value)} fullWidth  label="Номер телефона"  />
-                </Stack>
-                <Button sx={{mr:2}} onClick={handleSubmit} variant="contained">Готово</Button>
-                <Button onClick={() => setIsOpen(false)} variant="text">Отмена</Button>
-            </Box>
-        </Modal>
+        <OrderModal isOpen={isOpen} setIsOpen={setIsOpen} handleSubmit={handleSubmit} />
     </>;
 }
 
