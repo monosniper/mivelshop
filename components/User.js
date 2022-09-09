@@ -21,7 +21,8 @@ function Order({order}) {
         const params = {
             public_key: process.env.NEXT_PUBLIC_QIWI_PUBLIC_KEY,
             'customFields[themeCode]': process.env.NEXT_PUBLIC_QIWI_THEME_CODE,
-            successUrl: 'http://localhost:3004/success',
+            // successUrl: 'http://localhost:3004/success',
+            successUrl: 'https://mivelshop.vercel.app/success',
             comment: 'Оплата товаров в MivelShop - ' + order.items.map(item => item.name).join(', '),
             account : '79643210393',
             phone: order.phone,
